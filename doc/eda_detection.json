@@ -1,0 +1,62 @@
+{
+  "stage": "frontend-eda-env-setup:detection",
+  "date": "2026-08-18",
+  "tools": {
+    "simulators": [
+      {
+        "name": "vcs",
+        "path": "/home/hexingyang/synopsys/tools/vcs/U-2023.03-SP2/bin/vcs",
+        "version": "U-2023.03-SP2",
+        "detected": true,
+        "usable": true,
+        "note": "vcs -ID without -full64 fails because VCS_ARCH_OVERRIDE points at linux; make compile uses -full64 and was verified successfully outside the sandbox."
+      },
+      {
+        "name": "xcelium",
+        "path": null,
+        "detected": false,
+        "usable": false
+      },
+      {
+        "name": "questa",
+        "path": null,
+        "detected": false,
+        "usable": false
+      },
+      {
+        "name": "verilator",
+        "path": null,
+        "detected": false,
+        "usable": false
+      }
+    ],
+    "waveform": [
+      {
+        "name": "verdi",
+        "path": "/home/hexingyang/synopsys/tools/verdi/U-2023.03-SP2/bin/verdi",
+        "version": "U-2023.03-SP2",
+        "detected": true,
+        "usable": "gui requires DISPLAY; command identified"
+      }
+    ],
+    "lint": [
+      {
+        "name": "vc_static_shell",
+        "path": "/home/hexingyang/synopsys/tools/vc_static/X-2025.06/bin/vc_static_shell",
+        "version": "X-2025.06_Full64",
+        "detected": true,
+        "usable": true
+      }
+    ]
+  },
+  "execution_log": [
+    "which vcs: detected",
+    "which xrun: not found",
+    "which vlog: not found",
+    "which verilator: not found",
+    "sandboxed make compile: failed to connect to license server",
+    "approved non-sandboxed make compile: succeeded with VCS U-2023.03-SP2_Full64",
+    "verdi -ID: detected version, GUI open failed because DISPLAY is unavailable",
+    "vc_static_shell -ID: detected X-2025.06_Full64"
+  ]
+}

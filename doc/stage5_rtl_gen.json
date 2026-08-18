@@ -1,0 +1,19 @@
+{
+  "stage": "frontend-rtl-gen",
+  "design_name": "rr_arbiter_3to1",
+  "status": "complete",
+  "files_created": [
+    "rtl/rr_arbiter_3to1.sv"
+  ],
+  "modules": [
+    {
+      "name": "rr_arbiter_3to1",
+      "type": "top",
+      "parameters": [
+        "DATA_WIDTH"
+      ]
+    }
+  ],
+  "backup": "not needed; rtl directory had no existing source files",
+  "warnings": []
+}

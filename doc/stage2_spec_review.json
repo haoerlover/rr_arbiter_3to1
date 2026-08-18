@@ -1,0 +1,32 @@
+{
+  "stage": "frontend-spec-review",
+  "design_name": "rr_arbiter_3to1",
+  "status": "ready",
+  "reviewed_input": "doc/stage1_spec_extraction.json",
+  "consistent_facts": [
+    "All top-level ports are in the clk_i domain.",
+    "NUM_INPUTS is fixed to 3 in v1.0.",
+    "DATA_WIDTH is a static elaboration parameter.",
+    "The round-robin pointer starts at input0 after reset.",
+    "The pointer advances only on output handshake.",
+    "The module has no CSR, interrupt, security, address, SRAM, RAM, or FIFO interface."
+  ],
+  "blocking_issues": [],
+  "risky_assumptions": [
+    {
+      "item": "rst_n_i release",
+      "risk": "The LRS names asynchronous assertion and synchronous release. RTL must use async reset in always_ff and rely on integrator to deassert cleanly to clk_i."
+    },
+    {
+      "item": "grant_o meaning",
+      "risk": "grant_o is defined as current output beat source, not same-cycle input accept source. TB must check grant_o only when out_valid_o is high."
+    }
+  ],
+  "software_visible_behavior_check": {
+    "csr": "not applicable by architecture",
+    "interrupts": "not applicable by MVP scope",
+    "status": "consistent"
+  },
+  "readiness_decision": "ready",
+  "recommended_next_step": "frontend-microarchitecture-analysis"
+}

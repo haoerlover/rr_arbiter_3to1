@@ -1,0 +1,37 @@
+{
+  "stage": "frontend-debug-triage",
+  "design_name": "rr_arbiter_3to1",
+  "mode": "post-pass health check",
+  "status": "clean_after_tb_timing_corrections",
+  "inputs": [
+    "doc/stage9_run_record.json",
+    "sim/compile.log",
+    "sim/sim.log"
+  ],
+  "failure_stage": "none",
+  "primary_failure_class": "none",
+  "likely_root_cause": "none",
+  "evidence": [
+    "compile.log contains no RTL syntax errors or VCS warnings reported by the targeted scan.",
+    "compile.log reports Verdi KDB elaboration done with 0 errors and 0 warnings.",
+    "sim.log contains TEST_PASS and no TEST_FAIL/fatal mismatch messages.",
+    "Initial sandboxed compile failed because the sandbox could not reach the license server; the same command succeeded outside the sandbox.",
+    "Two intermediate focused-TB failures were traced to TB sampling expectations, not RTL behavior: ready expectation after same-cycle refill and helper logic that always skipped the current valid half-cycle."
+  ],
+  "dut_tb_contract_check": {
+    "status": "consistent",
+    "checked_items": [
+      "TB instantiates all DUT ports from stage4_rtl_architecture.json.",
+      "TB treats grant_o as valid only with out_valid_o.",
+      "TB expects 1-cycle input-to-output latency.",
+    "TB checks backpressure stability while out_ready_i is low.",
+    "TB separates reset priority, invalid skip, full rotation, backpressure, and one-hot/refill behavior into focused testcase tasks."
+    ]
+  },
+  "warnings_or_residual_risks": [
+    "ASLR informational message appears in sim output; it did not affect pass/fail.",
+    "Regression scope is basic and does not include randomized traffic or long-run fairness under sparse valid patterns."
+  ],
+  "safest_next_action": "Use doc/round_robin_wave_analysis.md for the extracted waveform observations.",
+  "rerun_path": "frontend-compile-sim-run with backup before any source change"
+}

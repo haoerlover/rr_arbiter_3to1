@@ -1,0 +1,127 @@
+{
+  "stage": "frontend-spec-extraction",
+  "design_name": "rr_arbiter_3to1",
+  "source_files": [
+    "doc/rr_arbiter_3to1 LRS.md"
+  ],
+  "status": "complete",
+  "interfaces": {
+    "clock_reset": [
+      {
+        "name": "clk_i",
+        "direction": "input",
+        "width": 1,
+        "description": "single clock domain, positive-edge sampled"
+      },
+      {
+        "name": "rst_n_i",
+        "direction": "input",
+        "width": 1,
+        "description": "active-low asynchronous reset, synchronous release to clk_i domain"
+      }
+    ],
+    "data": [
+      {
+        "name": "in_valid_i",
+        "direction": "input",
+        "width": 3,
+        "protocol": "valid_ready_source"
+      },
+      {
+        "name": "in_ready_o",
+        "direction": "output",
+        "width": 3,
+        "protocol": "valid_ready_source"
+      },
+      {
+        "name": "in_data_i",
+        "direction": "input",
+        "width": "3*DATA_WIDTH",
+        "shape": "[2:0][DATA_WIDTH-1:0]"
+      },
+      {
+        "name": "out_valid_o",
+        "direction": "output",
+        "width": 1,
+        "protocol": "valid_ready_sink"
+      },
+      {
+        "name": "out_ready_i",
+        "direction": "input",
+        "width": 1,
+        "protocol": "valid_ready_sink"
+      },
+      {
+        "name": "out_data_o",
+        "direction": "output",
+        "width": "DATA_WIDTH"
+      },
+      {
+        "name": "grant_o",
+        "direction": "output",
+        "width": 3,
+        "encoding": "one_hot_current_output_source"
+      }
+    ],
+    "control": []
+  },
+  "parameters": [
+    {
+      "name": "DATA_WIDTH",
+      "default": 32,
+      "range": "1..1024",
+      "description": "data width per input and output beat"
+    },
+    {
+      "name": "NUM_INPUTS",
+      "default": 3,
+      "range": "fixed 3",
+      "description": "fixed number of request inputs in v1.0"
+    }
+  ],
+  "registers": [],
+  "clock_reset_summary": {
+    "clock_domains": [
+      "clk_i"
+    ],
+    "reset": {
+      "name": "rst_n_i",
+      "polarity": "active_low",
+      "assertion": "asynchronous",
+      "release": "synchronous_to_clk_i",
+      "reset_values": {
+        "out_valid_o": 0,
+        "out_data_o": 0,
+        "grant_o": 0,
+        "arb_ptr": 0
+      }
+    },
+    "cdc": "none"
+  },
+  "expected_behavior": {
+    "arbitration": "round-robin scan from pointer over inputs 0,1,2 with wrap",
+    "pointer_update": "advance to granted input plus one only on out_valid_o && out_ready_i",
+    "input_accept": "assert only one in_ready_o bit when output register can accept a new beat",
+    "backpressure": "hold out_valid_o, out_data_o, and grant_o while out_valid_o is high and out_ready_i is low",
+    "latency": "accepted input appears at output one cycle later",
+    "throughput": "one output beat per cycle after fill when out_ready_i is high and at least one input remains valid"
+  },
+  "error_handling": [
+    {
+      "condition": "input data changes while valid high and ready low",
+      "detection": "external checker",
+      "hardware_behavior": "samples data when input handshake occurs"
+    },
+    {
+      "condition": "out_ready_i remains low",
+      "detection": "external watchdog",
+      "hardware_behavior": "holds current output beat and backpressures all inputs"
+    }
+  ],
+  "sw_visible_behavior": {
+    "csr": "none",
+    "interrupts": "none",
+    "security": "none"
+  },
+  "ambiguities": []
+}

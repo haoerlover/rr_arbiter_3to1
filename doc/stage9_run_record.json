@@ -1,0 +1,68 @@
+{
+  "stage": "frontend-compile-sim-run",
+  "design_name": "rr_arbiter_3to1",
+  "status": "pass_after_focused_tb_update",
+  "date": "2026-08-18",
+  "sim_dir": "sim",
+  "pre_run": {
+    "makefile": "sim/Makefile",
+    "flist": "sim/flist",
+    "backup": [
+      {
+        "path": "sim/backup/20260818_214252",
+        "reason": "backup previous VCD/logs before first FSDB focused TB run"
+      },
+      {
+        "path": "sim/backup/20260818_214339",
+        "reason": "backup failing FSDB/logs before correcting ready expectation"
+      },
+      {
+        "path": "sim/backup/20260818_214412",
+        "reason": "backup failing FSDB/logs before correcting output wait helper"
+      },
+      {
+        "path": "sim/backup/20260818_212906",
+        "reason": "backup compile.log before make sim re-ran compile target"
+      },
+      {
+        "path": "sim/backup/20260818_212934",
+        "reason": "backup compile.log and sim.log before make sim_wave re-ran compile/sim"
+      }
+    ]
+  },
+  "tool": {
+    "simulator": "vcs",
+    "version": "U-2023.03-SP2_Full64",
+    "execution_mode": "non-sandboxed approval was required for license server access"
+  },
+  "compile": {
+    "command": "make compile",
+    "exit_status": 0,
+    "log": "sim/compile.log",
+    "classification": "clean compile",
+    "key_observations": [
+      "VCS parsed rtl/rr_arbiter_3to1.sv and tb/tb_rr_arbiter_3to1.sv.",
+      "Top module is tb_rr_arbiter_3to1.",
+      "Verdi KDB elaboration completed with 0 errors and 0 warnings."
+    ]
+  },
+  "simulation": {
+    "command": "make sim",
+    "exit_status": 0,
+    "log": "sim/sim.log",
+    "classification": "pass",
+    "key_observations": [
+      "TEST_INFO: full fairness test",
+      "Focused TB updated; latest sim_wave ran five independent round-robin testcase tasks.",
+      "TEST_PASS: rr_arbiter_3to1 focused round-robin self-checks passed",
+      "Simulation finished at 485000 ps."
+    ]
+  },
+  "wave_run": {
+    "command": "make sim_wave",
+    "exit_status": 0,
+    "dump": "sim/dump.fsdb",
+    "classification": "pass_with_fsdb_dump"
+  },
+  "routing_decision": "frontend-wave-debug completed with FSDB waveform analysis"
+}

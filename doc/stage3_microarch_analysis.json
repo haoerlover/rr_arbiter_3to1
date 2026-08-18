@@ -1,0 +1,74 @@
+{
+  "stage": "frontend-microarchitecture-analysis",
+  "design_name": "rr_arbiter_3to1",
+  "status": "complete",
+  "inputs": [
+    "doc/stage1_spec_extraction.json",
+    "doc/stage2_spec_review.json"
+  ],
+  "datapath": {
+    "storage": [
+      {
+        "name": "out_valid_q",
+        "width": 1,
+        "purpose": "tracks whether output register holds a valid beat"
+      },
+      {
+        "name": "out_data_q",
+        "width": "DATA_WIDTH",
+        "purpose": "holds accepted input data until downstream handshake"
+      },
+      {
+        "name": "grant_q",
+        "width": 3,
+        "purpose": "one-hot source tag for current output beat"
+      },
+      {
+        "name": "arb_ptr_q",
+        "width": 2,
+        "purpose": "next round-robin scan start pointer, legal values 0..2"
+      }
+    ],
+    "buffering": "single output register, no deep FIFO",
+    "data_transform": "none"
+  },
+  "control": {
+    "fsm_list": [
+      {
+        "name": "output_state",
+        "states": [
+          "EMPTY",
+          "FULL"
+        ],
+        "transitions": [
+          "EMPTY -> FULL when a selected input handshakes into the output register",
+          "FULL -> FULL when downstream handshakes and a new input is accepted in the same cycle",
+          "FULL -> EMPTY when downstream handshakes and no new input is accepted",
+          "FULL -> FULL when downstream is not ready"
+        ]
+      }
+    ],
+    "scheduler": "round-robin scan over input indexes starting from arb_ptr_q or the post-handshake next pointer"
+  },
+  "performance_constraints": [
+    "Input accept to output valid latency is 1 cycle.",
+    "Sustained throughput is 1 beat per cycle after fill when out_ready_i is high.",
+    "Under three continuously valid inputs, service interval per input is 3 output handshakes."
+  ],
+  "low_power_constraints": [
+    "Hold output registers stable under backpressure.",
+    "Do not toggle output valid/data when idle and no input is selected."
+  ],
+  "ordering_and_hazards": [
+    "Do not advance arb_ptr_q on input accept alone; use output handshake.",
+    "When output handshakes and new input is accepted in the same cycle, scan from the post-handshake pointer to avoid reselecting the just-served input.",
+    "Ignore grant_o when out_valid_o is low."
+  ],
+  "verification_sensitive_points": [
+    "Reset priority and reset values.",
+    "All-inputs-valid fairness sequence 0,1,2.",
+    "Backpressure output stability.",
+    "No double input accept in one cycle.",
+    "Pointer does not advance while output is stalled."
+  ]
+}

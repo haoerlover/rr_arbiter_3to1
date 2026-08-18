@@ -1,0 +1,27 @@
+{
+  "design_name": "rr_arbiter_3to1",
+  "spec": {
+    "files": [
+      "doc/rr_arbiter_3to1 LRS.md"
+    ],
+    "format": "markdown"
+  },
+  "rtl": {
+    "dir": "rtl",
+    "top_module": "rr_arbiter_3to1"
+  },
+  "tb": {
+    "dir": "tb",
+    "top_module": "tb_rr_arbiter_3to1"
+  },
+  "sim": {
+    "dir": "sim",
+    "simulator": "auto",
+    "timescale": "1ns/1ps",
+    "waveform": "auto",
+    "dump_format": "fsdb"
+  },
+  "docs": {
+    "dir": "doc"
+  }
+}

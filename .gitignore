@@ -1,0 +1,27 @@
+# Simulation and waveform products
+sim/simv
+sim/csrc/
+sim/simv.daidir/
+sim/ucli.key
+sim/*.log
+sim/*.vpd
+sim/*.vcd
+sim/*.fsdb
+sim/novas.*
+sim/verdi_config_file
+sim/verdiLog/
+sim/fsdb2vcdLog/
+sim/fsdbreportLog/
+sim/backup/
+
+# Verdi local state
+verdiLog/
+
+# Local generated backups
+doc/backup/
+tb/backup/
+
+# Generic editor/runtime noise
+*.swp
+*~
+.DS_Store

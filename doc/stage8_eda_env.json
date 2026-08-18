@@ -1,0 +1,51 @@
+{
+  "stage": "frontend-eda-env-setup",
+  "design_name": "rr_arbiter_3to1",
+  "status": "makefile_generated",
+  "inputs": [
+    "doc/stage7_integration_plan.json",
+    "sim/flist",
+    "input_config.json"
+  ],
+  "selected_tools": {
+    "simulator": {
+      "name": "vcs",
+      "version": "U-2023.03-SP2",
+      "path": "/home/hexingyang/synopsys/tools/vcs/U-2023.03-SP2/bin/vcs",
+      "usable_now": true
+    },
+    "waveform": {
+      "name": "verdi",
+      "version": "U-2023.03-SP2",
+      "path": "/home/hexingyang/synopsys/tools/verdi/U-2023.03-SP2/bin/verdi",
+      "dump_format": "fsdb"
+    },
+    "lint": {
+      "name": "vc_static_shell",
+      "version": "X-2025.06_Full64",
+      "path": "/home/hexingyang/synopsys/tools/vc_static/X-2025.06/bin/vc_static_shell"
+    }
+  },
+  "makefile": {
+    "path": "sim/Makefile",
+    "targets": [
+      "compile",
+      "sim",
+      "sim_wave",
+      "wave",
+      "lint",
+      "clean"
+    ],
+    "compile_command": "VCS_ARCH_OVERRIDE=linux vcs -full64 -sverilog -timescale=1ns/1ps -debug_access+all -kdb -P /home/hexingyang/synopsys/tools/verdi/U-2023.03-SP2/share/PLI/VCS/linux64/novas.tab /home/hexingyang/synopsys/tools/verdi/U-2023.03-SP2/share/PLI/VCS/linux64/pli.a -top tb_rr_arbiter_3to1 -f flist -l compile.log -o simv",
+    "sim_command": "./simv -l sim.log",
+    "sim_wave_command": "./simv +fsdb -l sim.log",
+    "wave_command": "verdi -sv -f flist -ssf dump.fsdb"
+  },
+  "backup": "not needed; Makefile did not exist before generation",
+  "warnings": [
+    "Sandboxed VCS runs cannot reach the license server; approved non-sandbox execution is required for compile and simulation.",
+    "vcs -ID without -full64 is not a reliable smoke test in this environment; make compile with -full64 is verified.",
+    "Verdi GUI needs a valid DISPLAY before make wave can open a viewer."
+  ],
+  "recommended_next_step": "frontend-compile-sim-run"
+}

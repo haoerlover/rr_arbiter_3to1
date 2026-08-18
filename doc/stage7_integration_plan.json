@@ -1,0 +1,65 @@
+{
+  "stage": "frontend-integration-and-bringup",
+  "design_name": "rr_arbiter_3to1",
+  "status": "compile_ready",
+  "inputs": [
+    "doc/stage5_rtl_gen.json",
+    "doc/stage6_tb_gen.json",
+    "doc/stage4_rtl_architecture.json"
+  ],
+  "top_level_mapping": {
+    "dut": "rr_arbiter_3to1",
+    "tb": "tb_rr_arbiter_3to1",
+    "parameter_overrides": {
+      "DATA_WIDTH": 32
+    },
+    "ports": {
+      "clk_i": "tb clock",
+      "rst_n_i": "tb reset",
+      "in_valid_i": "tb stimulus vector",
+      "in_ready_o": "tb observed input ready vector",
+      "in_data_i": "tb stimulus data array",
+      "out_valid_o": "tb observed output valid",
+      "out_ready_i": "tb driven output ready",
+      "out_data_o": "tb observed output data",
+      "grant_o": "tb observed source one-hot"
+    }
+  },
+  "testbench_plan": {
+    "basic_tests": [
+      "reset values",
+      "all-inputs-valid round-robin fairness",
+      "downstream backpressure output stability"
+    ],
+    "checker_strategy": "self-checking TB with fatal failure on data, grant, reset, ready, or stability mismatch"
+  },
+  "filelist": {
+    "path": "sim/flist",
+    "order": [
+      "../rtl/rr_arbiter_3to1.sv",
+      "../tb/tb_rr_arbiter_3to1.sv"
+    ],
+    "order_rationale": "DUT module is compiled before TB instantiates it; no packages are used."
+  },
+  "makefile_plan": {
+    "sim_dir": "sim",
+    "targets": [
+      "compile",
+      "sim",
+      "sim_wave",
+      "wave",
+      "lint",
+      "clean"
+    ]
+  },
+  "compile_vs_elaboration_readiness": {
+    "compile": "ready",
+    "elaboration": "ready",
+    "runtime": "ready_with_basic_self_checks"
+  },
+  "bringup_risks": [
+    "Simulator must support SystemVerilog unpacked array ports.",
+    "TB samples output handshakes on stable half-cycle before the active clock edge."
+  ],
+  "recommended_next_step": "frontend-eda-env-setup"
+}

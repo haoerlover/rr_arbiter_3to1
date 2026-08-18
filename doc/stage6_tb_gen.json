@@ -1,0 +1,26 @@
+{
+  "stage": "frontend-tb-gen",
+  "design_name": "rr_arbiter_3to1",
+  "status": "complete",
+  "files_created": [
+    "tb/tb_rr_arbiter_3to1.sv"
+  ],
+  "tb_components": [
+    "clock and reset generation",
+    "DUT instantiation",
+    "reset checker",
+    "reset initial priority checker",
+    "invalid input skip checker",
+    "full-load round-robin fairness checker",
+    "backpressure stability checker",
+    "ready one-hot and consume/refill checker",
+    "optional FSDB dump via +fsdb",
+    "optional VCD dump via +vcd"
+  ],
+  "authority": "doc/stage1_spec_extraction.json",
+  "backup": "previous TB backed up at tb/backup/20260818_214141",
+  "warnings": [
+    "The first expanded TB run exposed a bad ready expectation in ready_onehot_and_consume_refill; the expectation was corrected to account for same-cycle output consume and input refill.",
+    "The second expanded TB run exposed that wait_output_and_check always advanced to the next negedge before checking; the helper now checks the current valid/ready half-cycle first."
+  ]
+}
